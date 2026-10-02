@@ -28,7 +28,14 @@ h1, h2, h3 { font-family: var(--rounded); letter-spacing: -0.02em; line-height: 
 .nav { display: flex; gap: 22px; align-items: center; font-size: 15px; }
 .nav a { color: var(--quiet); }
 .nav a:hover { color: var(--ink); text-decoration: none; }
-.pill { display: inline-block; padding: 7px 14px; border-radius: 999px; background: var(--brand); color: #fff !important; font-weight: 600; }
+.pill { display: inline-block; padding: 7px 14px; border-radius: 999px; background: var(--brand); color: #fff !important; font-weight: 600; white-space: nowrap; }
+.brand { white-space: nowrap; min-width: 0; }
+@media (max-width: 380px) {
+  .site-header .wrap { padding: 0 14px; }
+  .brand { font-size: 17px; gap: 8px; }
+  .brand img { width: 30px; height: 30px; }
+  .pill { padding: 6px 11px; font-size: 14px; }
+}
 @media (max-width: 640px) { .nav .hide-sm { display: none; } }
 
 /* Hero */
