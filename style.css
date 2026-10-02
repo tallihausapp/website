@@ -180,3 +180,12 @@ section.features { padding: 40px 0 20px; }
 .nav a.current { color: var(--ink); font-weight: 650; }
 @media (max-width: 560px) { .nav .hide-xs { display: none; } }
 .site-footer nav { flex-wrap: wrap; gap: 8px 20px; }
+
+/* 30-second tour video */
+.tour-video { padding: 56px 0 10px; text-align: center; }
+.tour-video .section-head { margin-top: 0; }
+.video-frame { width: min(330px, 82vw); margin: 26px auto 0; border-radius: 46px; padding: 9px; background: #0F1713;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.28), 0 0 0 1px rgba(255,255,255,0.06); }
+.video-frame video { display: block; width: 100%; aspect-ratio: 9 / 16; border-radius: 38px; background: #0F1713; }
+.tour-video .note { color: var(--quiet); font-size: 14px; margin-top: 14px; }
+.choose-card .watch { display: inline-block; margin-left: 14px; font-weight: 600; color: var(--quiet); }
