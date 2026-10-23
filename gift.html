@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>A closing gift · Tallihaus</title>
+<meta name="description" content="Welcome home! Here's 3 months of Tallihaus Plus, free.">
+<meta name="theme-color" content="#173B2A">
+<link rel="icon" type="image/png" href="img/favicon-64.png?v=14">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=14">
+<meta property="og:title" content="Welcome home! A closing gift for you">
+<meta property="og:description" content="3 months of Tallihaus Plus, free: bills, mortgage, appliances and upkeep in one calm place.">
+<meta property="og:image" content="https://tallihaus.com/img/gift-og.png">
+<!--
+  Virtual closing gift for realtors, lenders and title companies to text or email to clients.
+  Personalized by the link:  gift.html?from=Jane%20Smith&co=ABC%20Realty&code=SMITHGIFT
+    from = who it's from (shown as "With thanks from ...")
+    co   = brokerage or company (optional)
+    code = that partner's App Store offer code (3 free months)
+  Before launch, set APP_ID below (App Store Connect → App Information → Apple ID).
+-->
+<style>
+  :root { --forest:#1E4A36; --deep:#173B2A; --leaf:#8CC197; --cream:#F3EEDF; --paper:#FBFAF5; --ink:#1C211E; --quiet:#5E6862; --line:#DDD6C4;
+    --rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    --text: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--deep); color: var(--ink); font-family: var(--text); -webkit-font-smoothing: antialiased; }
+  .card { max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+  .front { background: linear-gradient(160deg, #24543E 0%, #1E4A36 45%, #173B2A 100%); color: #fff; padding: 44px 28px 32px; }
+  .house { width: 78px; height: auto; display: block; margin-bottom: 26px; }
+  .eyebrow { font: 700 13px var(--text); letter-spacing: .16em; text-transform: uppercase; color: var(--leaf); margin: 0; }
+  h1 { font: 800 46px/1.02 var(--rounded); letter-spacing: -0.02em; margin: 10px 0 14px; }
+  .sub { font: 400 17px/1.5 var(--text); color: rgba(255,255,255,.84); margin: 0; }
+  .from { border-top: 1px solid rgba(255,255,255,.22); margin-top: 26px; padding-top: 14px; }
+  .from .label { font: 700 11px var(--text); letter-spacing: .12em; text-transform: uppercase; color: var(--leaf); }
+  .from .name { font: 600 19px var(--rounded); margin-top: 4px; }
+  .from .co { font-size: 14px; color: rgba(255,255,255,.7); margin-top: 2px; }
+  .back { background: var(--paper); padding: 28px 24px 36px; flex: 1; }
+  .brand { display: flex; align-items: center; gap: 9px; font: 700 18px var(--rounded); color: var(--forest); }
+  .brand img { width: 30px; height: 30px; border-radius: 7px; }
+  h2 { font: 700 28px/1.12 var(--rounded); letter-spacing: -0.015em; margin: 18px 0 8px; }
+  .lede { font-size: 15px; line-height: 1.5; color: var(--quiet); margin: 0 0 20px; }
+  .claim { display: block; text-align: center; background: var(--forest); color: #fff; text-decoration: none; font: 700 18px var(--text);
+    padding: 16px 20px; border-radius: 999px; }
+  .claim:active { opacity: .85; }
+  .code { text-align: center; margin: 14px 0 0; font-size: 14px; color: var(--quiet); }
+  .code b { font: 700 16px ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .08em; color: var(--forest);
+    background: var(--cream); border-radius: 6px; padding: 3px 8px; }
+  .steps { margin: 22px 0 0; padding: 16px 18px; background: #fff; border: 1px solid var(--line); border-radius: 16px; list-style: none; font-size: 14px; line-height: 1.45; }
+  .steps li { display: flex; gap: 10px; margin: 6px 0; }
+  .steps .n { flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--forest); color: #fff; font: 700 11px/20px var(--text); text-align: center; margin-top: 1px; }
+  .gets { list-style: none; padding: 0; margin: 22px 0 0; font-size: 15px; line-height: 1.4; }
+  .gets li { padding-left: 18px; position: relative; margin: 8px 0; }
+  .gets li::before { content: ""; position: absolute; left: 2px; top: 7px; width: 7px; height: 7px; border-radius: 50%; background: var(--leaf); }
+  .fine { font-size: 11.5px; line-height: 1.45; color: var(--quiet); border-top: 1px solid var(--line); margin-top: 26px; padding-top: 12px; }
+  .fine a { color: var(--forest); }
+</style>
+</head>
+<body>
+<div class="card">
+  <section class="front">
+    <svg class="house" viewBox="0 0 120 110" aria-hidden="true">
+      <path d="M14 52 L60 14 L106 52" fill="none" stroke="#8CC197" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M26 46 V96 H94 V46" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M50 96 V68 a10 10 0 0 1 20 0 V96" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="5"/>
+      <circle cx="65" cy="82" r="2.6" fill="#8CC197"/>
+    </svg>
+    <p class="eyebrow">A closing gift</p>
+    <h1>Welcome<br>home.</h1>
+    <p class="sub">Three months of Tallihaus Plus, to help you keep track of everything that comes with your new house.</p>
+    <div class="from" id="from" hidden>
+      <div class="label">With thanks from</div>
+      <div class="name" id="fromName"></div>
+      <div class="co" id="fromCo"></div>
+    </div>
+  </section>
+
+  <section class="back">
+    <div class="brand"><img src="img/icon-512.png?v=14" alt="">Tallihaus</div>
+    <h2>3 months of Plus, on us.</h2>
+    <p class="lede">Bills, mortgage, appliances and upkeep in one calm place, with Plus doing the paperwork for you.</p>
+
+    <a class="claim" id="claim" href="https://tallihaus.com">Claim my 3 free months</a>
+    <p class="code" id="codeLine" hidden>Or enter code <b id="code"></b> in the App Store</p>
+
+    <ol class="steps">
+      <li><span class="n">1</span><span>Tap the button above on your iPhone.</span></li>
+      <li><span class="n">2</span><span>Tap Redeem in the App Store. Tallihaus downloads if you don't have it yet.</span></li>
+      <li><span class="n">3</span><span>Open Tallihaus and tap "Yes, I'm home."</span></li>
+    </ol>
+
+    <ul class="gets">
+      <li>Snap an appliance label and see how old it is</li>
+      <li>Reads your utility bills and mortgage papers</li>
+      <li>Tells you when you can drop PMI</li>
+      <li>Reminders for filters, gutters and more</li>
+      <li>Recall and freeze alerts</li>
+      <li>Your home's story, from move-in day</li>
+    </ul>
+
+    <p class="fine">iPhone, iOS 18 or later. After 3 free months, Tallihaus Plus renews at the regular price unless you cancel at least 24 hours before it ends (cancel anytime in your iPhone's Settings). For new Plus subscribers; one code per Apple account. The core app stays free. Tallihaus™ is a trademark of Tallihaus LLC. <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></p>
+  </section>
+</div>
+<script>
+  // Set once the app is on the App Store (App Store Connect → App Information → Apple ID).
+  const APP_ID = "";
+  const p = new URLSearchParams(location.search);
+  const clean = (v, max) => (v || "").trim().slice(0, max);
+  const from = clean(p.get("from"), 60), co = clean(p.get("co"), 80), code = clean(p.get("code"), 40).toUpperCase().replace(/[^A-Z0-9-]/g, "");
+  if (from) { document.getElementById("from").hidden = false; document.getElementById("fromName").textContent = from;
+              document.getElementById("fromCo").textContent = co; }
+  if (code) { document.getElementById("codeLine").hidden = false; document.getElementById("code").textContent = code; }
+  const claim = document.getElementById("claim");
+  if (APP_ID && code) claim.href = "https://apps.apple.com/redeem?ctx=offercodes&id=" + APP_ID + "&code=" + encodeURIComponent(code);
+  else if (APP_ID) claim.href = "https://apps.apple.com/app/id" + APP_ID;
+</script>
+</body>
+</html>
