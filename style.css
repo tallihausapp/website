@@ -211,3 +211,20 @@ section.features { padding: 40px 0 20px; }
   .passport-band .pages { height: 440px; max-width: 520px; width: 100%; margin: 0 auto; }
 }
 @media (max-width: 480px) { .passport-band .pages { height: 360px; } }
+
+/* Free vs. Plus comparison (home page) */
+.plans-wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 10px; }
+.compare { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.compare th, .compare td { padding: 14px 18px; border-bottom: 1px solid var(--line); text-align: left; font-size: 16px; line-height: 1.35; }
+.compare tbody tr:last-child th, .compare tbody tr:last-child td { border-bottom: 0; }
+.compare tbody th { font-weight: 400; }
+.compare thead th { font: 650 14px var(--text); color: var(--quiet); text-align: center; padding-top: 16px; padding-bottom: 10px; }
+.compare thead th.plus-col { color: var(--brand); }
+.compare td { text-align: center; width: 78px; }
+.compare td:last-child, .compare thead th.plus-col { background: color-mix(in srgb, var(--brand) 7%, transparent); }
+.compare .yes { color: var(--brand); font-size: 20px; font-weight: 700; }
+.compare .no { color: var(--quiet); opacity: .6; }
+.plans-price { text-align: center; color: var(--quiet); font-size: 15px; margin: 18px 0 0; }
+.plans-price strong { color: var(--ink); font-weight: 650; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 480px) { .compare th, .compare td { padding: 12px 12px; font-size: 15px; } .compare td { width: 54px; } }
