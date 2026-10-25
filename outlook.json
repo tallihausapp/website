@@ -1,0 +1,56 @@
+{
+  "format": 1,
+  "asOf": "2026-10-01",
+  "fed": {
+    "targetRange": "3.75–4%",
+    "lastMove": "On September 16, 2026 the Fed raised its target rate by 0.25%, its first increase since 2023, because inflation has stayed above 3% all year.",
+    "outlook": "Most Fed officials expect one more increase by the end of 2026, then no change in 2027. Markets are pricing in another 0.25% increase in December.",
+    "nextMeeting": "2026-10-28"
+  },
+  "forecasts": [
+    {
+      "source": "Fannie Mae",
+      "published": "September 2026",
+      "note": "Based on rates as of August 31, before the September jump.",
+      "points": [
+        { "label": "Q4 2026", "date": "2026-11-15", "rate": 6.8 },
+        { "label": "Q1 2027", "date": "2027-02-15", "rate": 6.7 },
+        { "label": "Q2 2027", "date": "2027-05-15", "rate": 6.7 }
+      ]
+    },
+    {
+      "source": "Mortgage Bankers Association",
+      "published": "July 2026",
+      "note": "Expects rates to hold near 6.5% through 2027.",
+      "points": [
+        { "label": "Q4 2026", "date": "2026-11-15", "rate": 6.5 },
+        { "label": "Q1 2027", "date": "2027-02-15", "rate": 6.5 },
+        { "label": "Q2 2027", "date": "2027-05-15", "rate": 6.5 }
+      ]
+    }
+  ],
+  "aboveForecastNote": "Rates today are well above these forecasts, which were made before September's jump. Expect forecasters to raise them in their next updates.",
+  "scenarios": [
+    {
+      "name": "Fed keeps raising",
+      "explanation": "The Fed raises again in December and signals more. Mortgage rates tend to drift up when that's expected: about +0.35% over six months.",
+      "change": 0.35
+    },
+    {
+      "name": "Fed pauses after one more",
+      "explanation": "One more increase, then a long pause. Rates stay close to where they are today, easing slightly as the pause becomes clear.",
+      "change": -0.1
+    },
+    {
+      "name": "Inflation cools",
+      "explanation": "Inflation falls faster than expected and the Fed stops raising. Rates move back toward Fannie Mae's 6.7% forecast.",
+      "ceiling": 6.7
+    }
+  ],
+  "sources": [
+    { "name": "Freddie Mac Primary Mortgage Market Survey", "detail": "Weekly average 30- and 15-year fixed rates (live, via FRED)", "url": "https://www.freddiemac.com/pmms" },
+    { "name": "FRED, Federal Reserve Bank of St. Louis", "detail": "Series MORTGAGE30US and MORTGAGE15US", "url": "https://fred.stlouisfed.org/series/MORTGAGE30US" },
+    { "name": "Fannie Mae Housing Forecast", "detail": "September 2026", "url": "https://www.fanniemae.com/research-and-insights/forecast" },
+    { "name": "Federal Reserve FOMC statements", "detail": "September 16, 2026 decision and projections", "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" }
+  ]
+}
