@@ -228,3 +228,7 @@ section.features { padding: 40px 0 20px; }
 .plans-price strong { color: var(--ink); font-weight: 650; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (max-width: 480px) { .compare th, .compare td { padding: 12px 12px; font-size: 15px; } .compare td { width: 54px; } }
+
+/* The House Binder band (home page): same look as the Passport band, pages on the left. */
+.passport-band.binder { border-top: 0; margin-top: 40px; }
+@media (min-width: 861px) { .passport-band.binder .pages { order: -1; } }
