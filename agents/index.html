@@ -164,6 +164,7 @@
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script>
 (() => {
+  const BINDER_VERSION = 2;   // Nov 14, 2026: (555) phone format, more space under the green lines
   const $ = id => document.getElementById(id);
   const fields = ['name', 'brokerage', 'phone', 'email', 'website', 'note'];
   const images = { photo: null, logo: null };   // PNG bytes, ready for the PDF
@@ -291,8 +292,9 @@
     try {
       const { PDFDocument, StandardFonts, rgb } = PDFLib;
       const [bytes, layout] = await Promise.all([
-        fetch('agent-binder.pdf').then(r => { if (!r.ok) throw new Error('binder'); return r.arrayBuffer(); }),
-        fetch('layout.json').then(r => r.json()),
+        // BINDER_VERSION: bump with every new agent-binder.pdf or layout.json, so browsers don't reuse an old copy.
+        fetch(`agent-binder.pdf?v=${BINDER_VERSION}`, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error('binder'); return r.arrayBuffer(); }),
+        fetch(`layout.json?v=${BINDER_VERSION}`, { cache: 'no-cache' }).then(r => r.json()),
       ]);
       const doc = await PDFDocument.load(bytes);
       const page = doc.getPage(layout.page - 1);
