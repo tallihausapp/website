@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- tallihaus.com/app: where the House Binder's QR codes go. Counts the visit, then forwards.
+     ON LAUNCH DAY: change APP_URL to the App Store link, https://apps.apple.com/app/id6818800439
+     (and the meta refresh below), then publish the website. Printed binders keep working. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get Tallihaus</title>
+<meta http-equiv="refresh" content="2;url=/">
+<style>
+  body { margin: 0; font: 17px/1.5 -apple-system, "Helvetica Neue", sans-serif; background: #F3EEDF; color: #1E4A36; display: grid; place-items: center; min-height: 100vh; text-align: center; padding: 0 20px; }
+  @media (prefers-color-scheme: dark) { body { background: #121714; color: #F1F4EF; } a { color: #6BB38C; } }
+  img.icon { width: 72px; height: 72px; border-radius: 16px; }
+  a { color: #245C43; font-weight: 600; }
+</style>
+</head>
+<body>
+<div>
+  <img class="icon" src="/img/icon-512.png?v=14" alt="">
+  <p>Opening Tallihaus…<br><a id="go" href="/">Tap here if nothing happens</a></p>
+</div>
+<!-- Counts the scan without slowing the hop (GoatCounter, no cookies). -->
+<img src="https://tallihaus.goatcounter.com/count?p=%2Fapp%2Fscan&t=Binder%20QR%20scan" alt="" width="1" height="1" style="position:absolute;opacity:0">
+<script>
+  const APP_URL = '/';   // Launch day: 'https://apps.apple.com/app/id6818800439'
+  document.getElementById('go').href = APP_URL;
+  setTimeout(() => location.replace(APP_URL), 400);
+</script>
+</body>
+</html>
