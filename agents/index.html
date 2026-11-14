@@ -52,12 +52,12 @@
   .sheet .eyebrow { left: 9.15cqw; top: 15cqw; font-size: 1.5cqw; letter-spacing: .16em; font-weight: 700; color: #245C43; }
   .sheet .h1 { left: 9.15cqw; top: 17.3cqw; font-size: 6.5cqw; font-weight: 800; color: #1E4A36; }
   .sheet .with { left: 9.15cqw; right: 9.15cqw; top: 34.6cqw; font-size: 2cqw; font-weight: 700; color: #245C43; border-bottom: .35cqw solid #245C43; padding-bottom: .6cqw; }
-  .sheet .photo { left: 9.15cqw; top: 38.6cqw; width: 17cqw; height: 17cqw; border-radius: 50%; object-fit: cover; background: #eef1ee; }
-  .sheet .logo { left: 64cqw; top: 38.6cqw; width: 26.8cqw; height: 10.5cqw; object-fit: contain; object-position: right top; }
-  .sheet .name { top: 39.2cqw; font-size: 3.1cqw; font-weight: 700; }
+  .sheet .photo { left: 9.15cqw; top: 40.85cqw; width: 17cqw; height: 17cqw; border-radius: 50%; object-fit: cover; background: #eef1ee; }
+  .sheet .logo { left: 64cqw; top: 40.85cqw; width: 26.8cqw; height: 10.5cqw; object-fit: contain; object-position: right top; }
+  .sheet .name { top: 41.5cqw; font-size: 3.1cqw; font-weight: 700; }
   .sheet .line { font-size: 1.75cqw; color: #4b5550; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .sheet .nh { left: 9.15cqw; right: 9.15cqw; top: 61.1cqw; font-size: 2cqw; font-weight: 700; color: #245C43; border-bottom: .35cqw solid #245C43; padding-bottom: .9cqw; }
-  .sheet .note { left: 9.15cqw; width: 81.7cqw; top: 65.4cqw; font-size: 1.8cqw; line-height: 1.45; max-height: 19.3cqw; overflow: hidden; }
+  .sheet .nh { left: 9.15cqw; right: 9.15cqw; top: 62.75cqw; font-size: 2cqw; font-weight: 700; color: #245C43; border-bottom: .35cqw solid #245C43; padding-bottom: .9cqw; }
+  .sheet .note { left: 9.15cqw; width: 81.7cqw; top: 68.3cqw; font-size: 1.8cqw; line-height: 1.45; max-height: 18.3cqw; overflow: hidden; }
   .sheet .qr { left: 9.15cqw; right: 9.15cqw; top: 91.5cqw; border: .25cqw solid #245C43; border-radius: 1.6cqw; padding: 2cqw; display: flex; gap: 2.6cqw; align-items: center; font-size: 1.6cqw; color: #4b5550; }
   .sheet .qr img { width: 13cqw; height: 13cqw; }
   .sheet .qr b { display: block; color: #1E4A36; font-size: 2.1cqw; margin-bottom: .6cqw; }
@@ -168,6 +168,15 @@
   const fields = ['name', 'brokerage', 'phone', 'email', 'website', 'note'];
   const images = { photo: null, logo: null };   // PNG bytes, ready for the PDF
 
+  // ---- Phone numbers: (555) 555-5555 ------------------------------------------------------------------
+  // A 10-digit U.S. number (or 11 starting with 1) is written the usual way; anything else stays as typed.
+  function formatPhone(value) {
+    const digits = value.replace(/\D/g, '');
+    const n = digits.length === 11 && digits[0] === '1' ? digits.slice(1) : digits;
+    return n.length === 10 ? `(${n.slice(0, 3)}) ${n.slice(3, 6)}-${n.slice(6)}` : value.trim();
+  }
+  $('phone').addEventListener('blur', () => { $('phone').value = formatPhone($('phone').value); });
+
   // ---- Live preview -------------------------------------------------------------------------------
   function preview() {
     const v = Object.fromEntries(fields.map(f => [f, $(f).value.trim()]));
@@ -175,7 +184,7 @@
     const left = hasPhoto ? 28.8 : 9.15;   // cqw, matches the PDF layout (176pt vs 56pt of 612)
     $('pvName').textContent = v.name || 'Your name';
     $('pvName').style.left = left + 'cqw';
-    const lines = [['pvBrokerage', v.brokerage, 43.8], ['pvPhone', v.phone, 47.7], ['pvEmail', v.email, 50.5], ['pvWebsite', v.website, 53.3]];
+    const lines = [['pvBrokerage', v.brokerage, 46.1], ['pvPhone', formatPhone(v.phone), 50], ['pvEmail', v.email, 52.8], ['pvWebsite', v.website, 55.6]];
     for (const [id, text, top] of lines) {
       $(id).textContent = text; $(id).style.left = left + 'cqw'; $(id).style.top = top + 'cqw';
       $(id).style.width = (images.logo ? 64 - left - 1.5 : 90.85 - left) + 'cqw';
@@ -314,7 +323,7 @@
       text(name, at(layout.name), bold, ink, 13);
       const v = id => $(id).value.trim();
       if (v('brokerage')) text(v('brokerage'), at(layout.brokerage), bold, quiet);
-      if (v('phone')) text(v('phone'), at(layout.phone), regular, quiet);
+      if (v('phone')) text(formatPhone(v('phone')), at(layout.phone), regular, quiet);
       if (v('email')) text(v('email'), at(layout.email), regular, quiet, 8);
       if (v('website')) text(v('website'), at(layout.website), regular, quiet, 8);
 
