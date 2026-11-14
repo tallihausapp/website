@@ -38,6 +38,23 @@
   .pick .ph { width: 46px; height: 46px; border-radius: 10px; background: var(--canvas); display: grid; place-items: center; color: var(--quiet); font-size: 20px; }
   .pick span { font-size: 14px; color: var(--quiet); }
   .pick input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .adjust { justify-self: start; margin-top: 2px; background: none; border: 0; padding: 4px 2px; font: inherit; font-size: 13px; font-weight: 650; color: var(--brand); cursor: pointer; }
+  .crop { border: 0; border-radius: 18px; padding: 20px; width: min(420px, calc(100vw - 32px)); box-sizing: border-box; background: var(--surface); color: var(--ink); }
+  .crop::backdrop { background: rgba(0,0,0,.55); }
+  .crop h2 { font-size: 18px; }
+  .crophint { color: var(--quiet); font-size: 14px; margin: 4px 0 12px; }
+  .stage { position: relative; width: 100%; overflow: hidden; border-radius: 12px; touch-action: none; cursor: grab; user-select: none;
+    background: repeating-conic-gradient(#e9ece9 0% 25%, #fff 0% 50%) 50% / 16px 16px; }
+  .stage.dragging { cursor: grabbing; }
+  .stage img { position: absolute; left: 0; top: 0; transform-origin: 0 0; max-width: none; pointer-events: none; }
+  .stage .frame { position: absolute; inset: 0; pointer-events: none; }
+  .stage.circle .frame { border-radius: 50%; box-shadow: 0 0 0 999px rgba(20,24,22,.55); }
+  .stage.rect .frame { outline: 2px dashed rgba(36,92,67,.9); outline-offset: -2px; }
+  .zoom { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; margin-top: 14px; font-size: 14px; }
+  .zoom input { width: 100%; accent-color: var(--brand); }
+  .cropbtns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+  .cropbtns button { font: inherit; font-weight: 650; padding: 10px 16px; border-radius: 12px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+  .cropbtns .use { background: var(--brand); color: #fff; border-color: var(--brand); }
   .count { font-size: 12px; color: var(--quiet); text-align: right; }
   .make { margin-top: 18px; width: 100%; border: 0; cursor: pointer; background: var(--brand); color: #fff; font: inherit; font-weight: 700; font-size: 17px; padding: 15px; border-radius: 14px; }
   .make:disabled { opacity: .55; cursor: default; }
@@ -104,9 +121,11 @@
       <div class="field"><label for="website">Website <small>(optional)</small></label><input type="text" id="website" maxlength="44" placeholder="abcrealty.com/jane" autocomplete="url"></div>
       <div class="two">
         <div class="field"><label>Your photo <small>(optional)</small></label>
-          <label class="pick" for="photo"><span class="ph" id="photoThumb">👤</span><span id="photoLabel">Choose a headshot</span><input type="file" id="photo" accept="image/*"></label></div>
+          <label class="pick" for="photo"><span class="ph" id="photoThumb">👤</span><span id="photoLabel">Choose a headshot</span><input type="file" id="photo" accept="image/*"></label>
+          <button type="button" class="adjust" id="photoAdjust" hidden>Adjust crop</button></div>
         <div class="field"><label>Brokerage logo <small>(optional)</small></label>
-          <label class="pick" for="logo"><span class="ph" id="logoThumb">🏷</span><span id="logoLabel">Choose your logo</span><input type="file" id="logo" accept="image/*"></label></div>
+          <label class="pick" for="logo"><span class="ph" id="logoThumb">🏷</span><span id="logoLabel">Choose your logo</span><input type="file" id="logo" accept="image/*"></label>
+          <button type="button" class="adjust" id="logoAdjust" hidden>Adjust crop</button></div>
       </div>
       <div class="field"><label for="note">A note to your clients <small>(optional)</small></label>
         <textarea id="note" maxlength="420">Congratulations on your new home! This binder keeps everything you need to know about it in one place: where things are, how old they are and what needs doing when. And when you need a plumber, a roofer or a second opinion, call me. My job doesn't end at closing.</textarea>
@@ -151,6 +170,14 @@
     <p><strong>Questions or ideas?</strong><br>Email <a href="mailto:tallihaus@outlook.com">tallihaus@outlook.com</a>.</p>
   </section>
 </main>
+
+<dialog class="crop" id="crop" aria-labelledby="cropTitle">
+  <h2 id="cropTitle">Crop your photo</h2>
+  <p class="crophint" id="cropHint">Drag to move it. Use the slider (or pinch) to zoom.</p>
+  <div class="stage" id="stage"><img id="cropImg" alt="" draggable="false"><div class="frame" id="frame"></div></div>
+  <label class="zoom" for="zoom"><span>Zoom</span><input type="range" id="zoom" min="0" max="1" step="0.001" value="0"></label>
+  <div class="cropbtns"><button type="button" id="cropCancel">Cancel</button><button type="button" class="use" id="cropUse">Use This</button></div>
+</dialog>
 
 <footer class="site-footer">
   <div class="wrap">
@@ -209,46 +236,159 @@
   function canvasPNG(canvas) {
     return new Promise(resolve => canvas.toBlob(b => b.arrayBuffer().then(a => resolve(new Uint8Array(a))), 'image/png'));
   }
-  async function headshot(file) {
-    const { img, url } = await loadImage(file);
-    const side = Math.min(img.naturalWidth, img.naturalHeight);
-    const size = 600, c = document.createElement('canvas');
-    c.width = c.height = size;
-    const g = c.getContext('2d');
-    g.beginPath(); g.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2); g.clip();
-    // Center crop, leaning a little toward the top (faces sit high in most headshots).
-    const sx = (img.naturalWidth - side) / 2, sy = Math.max(0, (img.naturalHeight - side) * 0.3);
-    g.drawImage(img, sx, sy, side, side, 0, 0, size, size);
-    return { png: await canvasPNG(c), url };
+  // ---- Cropping: drag to move, slider / pinch / scroll to zoom ----------------------------------------
+  // The headshot crops to the circle on page 2; the logo to the shape of its spot (164 x 64 points), with
+  // empty space left clear. The result is what goes in the PDF.
+  const CROP = {
+    photo: { aspect: 1, out: [600, 600], circle: true, title: 'Crop your headshot', fill: true },
+    logo: { aspect: 164 / 64, out: [900, 351], circle: false, title: 'Crop your logo', fill: false },
+  };
+  const originals = { photo: null, logo: null };   // the picked image, to adjust again later
+  const crop = { kind: null, img: null, s: 1, min: 1, max: 4, x: 0, y: 0, W: 0, H: 0, resolve: null };
+
+  function placeImage() {
+    const { img, s, W, H } = crop;
+    const w = img.naturalWidth * s, h = img.naturalHeight * s;
+    // Keep the picture inside the frame (or the frame inside the picture, when it's bigger).
+    crop.x = Math.min(Math.max(crop.x, Math.min(0, W - w)), Math.max(0, W - w));
+    crop.y = Math.min(Math.max(crop.y, Math.min(0, H - h)), Math.max(0, H - h));
+    $('cropImg').style.transform = `translate(${crop.x}px, ${crop.y}px) scale(${s})`;
   }
-  async function logo(file) {
-    const { img, url } = await loadImage(file);
-    const scale = Math.min(1, 900 / img.naturalWidth, 400 / img.naturalHeight);
+  function zoomTo(newScale, cx = crop.W / 2, cy = crop.H / 2) {
+    const s = Math.min(Math.max(newScale, crop.min), crop.max);
+    crop.x = cx - (cx - crop.x) * (s / crop.s);   // keep the point under the finger/cursor still
+    crop.y = cy - (cy - crop.y) * (s / crop.s);
+    crop.s = s;
+    $('zoom').value = Math.log(s / crop.min) / Math.log(crop.max / crop.min);
+    placeImage();
+  }
+  function openCropper(kind, img) {
+    return new Promise(resolve => {
+      const cfg = CROP[kind];
+      crop.kind = kind; crop.img = img; crop.resolve = resolve;
+      $('cropTitle').textContent = cfg.title;
+      const stage = $('stage');
+      stage.className = 'stage ' + (cfg.circle ? 'circle' : 'rect');
+      stage.style.aspectRatio = String(cfg.aspect);
+      $('cropImg').src = img.src;
+      $('crop').showModal();
+      fitStage(true);
+    });
+  }
+  // Measures the frame and fits the picture. Called right after the window opens (reading the size forces
+  // layout), and again if the window changes size, like a phone turning sideways.
+  function fitStage(reset) {
+    const stage = $('stage'), img = crop.img, cfg = CROP[crop.kind];
+    if (!img || !cfg) return;
+    const W = stage.clientWidth, H = stage.clientHeight;
+    if (!W || !H) { requestAnimationFrame(() => fitStage(reset)); return; }
+    const cover = Math.max(W / img.naturalWidth, H / img.naturalHeight);
+    const contain = Math.min(W / img.naturalWidth, H / img.naturalHeight);
+    const oldW = crop.W;
+    crop.W = W; crop.H = H;
+    crop.min = cfg.fill ? cover : contain;      // a headshot always fills the circle; a logo may sit inside
+    crop.max = crop.min * 5;
+    if (reset || !oldW) {
+      crop.s = crop.min;
+      crop.x = (W - img.naturalWidth * crop.s) / 2;
+      // Faces sit high in most headshots, so start a little above center.
+      crop.y = cfg.fill ? Math.min(0, (H - img.naturalHeight * crop.s) * 0.3) : (H - img.naturalHeight * crop.s) / 2;
+    } else {
+      const f = W / oldW;
+      crop.s = Math.max(crop.s * f, crop.min); crop.x *= f; crop.y *= f;
+    }
+    $('zoom').value = Math.log(crop.s / crop.min) / Math.log(crop.max / crop.min);
+    placeImage();
+  }
+  new ResizeObserver(() => { if ($('crop').open) fitStage(false); }).observe($('stage'));
+
+  async function finishCrop(use) {
+    const { kind, img, resolve } = crop;
+    $('crop').close();
+    if (!use) { resolve(null); return; }
+    const cfg = CROP[kind];
+    const [OW, OH] = cfg.out, k = OW / crop.W;
     const c = document.createElement('canvas');
-    c.width = Math.max(1, Math.round(img.naturalWidth * scale)); c.height = Math.max(1, Math.round(img.naturalHeight * scale));
-    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-    return { png: await canvasPNG(c), url, w: c.width, h: c.height };
+    c.width = OW; c.height = OH;
+    const g = c.getContext('2d');
+    if (cfg.circle) { g.beginPath(); g.arc(OW / 2, OH / 2, OW / 2, 0, Math.PI * 2); g.clip(); }
+    g.imageSmoothingQuality = 'high';
+    g.drawImage(img, crop.x * k, crop.y * k, img.naturalWidth * crop.s * k, img.naturalHeight * crop.s * k);
+    const png = await canvasPNG(c);
+    resolve({ png, url: URL.createObjectURL(new Blob([png], { type: 'image/png' })), w: OW, h: OH });
   }
-  function wireImage(kind, make) {
+  $('cropUse').addEventListener('click', () => finishCrop(true));
+  $('cropCancel').addEventListener('click', () => finishCrop(false));
+  $('crop').addEventListener('cancel', e => { e.preventDefault(); finishCrop(false); });
+  $('zoom').addEventListener('input', e => zoomTo(crop.min * Math.pow(crop.max / crop.min, Number(e.target.value))));
+
+  // Drag with a mouse or one finger; pinch with two.
+  const pointers = new Map();
+  let pinchStart = null;
+  $('stage').addEventListener('pointerdown', e => {
+    $('stage').setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    $('stage').classList.add('dragging');
+    if (pointers.size === 2) {
+      const [a, b] = [...pointers.values()];
+      pinchStart = { d: Math.hypot(a.x - b.x, a.y - b.y), s: crop.s };
+    }
+  });
+  $('stage').addEventListener('pointermove', e => {
+    const prev = pointers.get(e.pointerId);
+    if (!prev) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size === 2 && pinchStart) {
+      const [a, b] = [...pointers.values()];
+      const r = $('stage').getBoundingClientRect();
+      zoomTo(pinchStart.s * Math.hypot(a.x - b.x, a.y - b.y) / pinchStart.d, (a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top);
+    } else if (pointers.size === 1) {
+      crop.x += e.clientX - prev.x; crop.y += e.clientY - prev.y;
+      placeImage();
+    }
+  });
+  const endPointer = e => {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) pinchStart = null;
+    if (pointers.size === 0) $('stage').classList.remove('dragging');
+  };
+  $('stage').addEventListener('pointerup', endPointer);
+  $('stage').addEventListener('pointercancel', endPointer);
+  $('stage').addEventListener('wheel', e => {
+    e.preventDefault();
+    const r = $('stage').getBoundingClientRect();
+    zoomTo(crop.s * Math.exp(-e.deltaY * 0.002), e.clientX - r.left, e.clientY - r.top);
+  }, { passive: false });
+
+  async function cropAndUse(kind) {
+    const out = await openCropper(kind, originals[kind]);
+    if (!out) return;
+    images[kind] = out;
+    $(kind + 'Thumb').outerHTML = `<img id="${kind}Thumb" src="${out.url}" alt="">`;
+    $(kind + 'Label').textContent = 'Change';
+    $(kind + 'Adjust').hidden = false;
+    const pv = $(kind === 'photo' ? 'pvPhoto' : 'pvLogo');
+    pv.src = out.url; pv.hidden = false;
+    preview();
+  }
+  function wireImage(kind) {
     $(kind).addEventListener('change', async e => {
       const file = e.target.files[0];
+      e.target.value = '';   // so picking the same file again still works
       if (!file) return;
       try {
-        const out = await make(file);
-        images[kind] = out;
-        $(kind + 'Thumb').outerHTML = `<img id="${kind}Thumb" src="${out.url}" alt="">`;
-        $(kind + 'Label').textContent = 'Change';
-        const pv = $(kind === 'photo' ? 'pvPhoto' : 'pvLogo');
-        pv.src = out.url; pv.hidden = false;
+        const { img } = await loadImage(file);
+        originals[kind] = img;
         status('');
+        await cropAndUse(kind);
       } catch {
         status("That picture couldn't be read. Try a JPG or PNG.", true);
       }
-      preview();
     });
+    $(kind + 'Adjust').addEventListener('click', () => { if (originals[kind]) cropAndUse(kind); });
   }
-  wireImage('photo', headshot);
-  wireImage('logo', logo);
+  wireImage('photo');
+  wireImage('logo');
 
   function status(text, isError = false) {
     $('status').textContent = text;
