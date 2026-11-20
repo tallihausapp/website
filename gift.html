@@ -18,7 +18,7 @@
     from = who it's from (shown as "With thanks from ...")
     co   = brokerage or company (optional)
     code = that partner's App Store offer code (3 free months)
-  Before launch, set APP_ID below (App Store Connect → App Information → Apple ID).
+  APP_ID below is the App Store ID (set Nov 19, 2026, launch day).
 -->
 <style>
   :root { --forest:#1E4A36; --deep:#173B2A; --leaf:#8CC197; --cream:#F3EEDF; --paper:#FBFAF5; --ink:#1C211E; --quiet:#5E6862; --line:#DDD6C4;
@@ -105,7 +105,7 @@
 </div>
 <script>
   // Set once the app is on the App Store (App Store Connect → App Information → Apple ID).
-  const APP_ID = "";
+  const APP_ID = "6818800439";
   const p = new URLSearchParams(location.search);
   const clean = (v, max) => (v || "").trim().slice(0, max);
   const from = clean(p.get("from"), 60), co = clean(p.get("co"), 80), code = clean(p.get("code"), 40).toUpperCase().replace(/[^A-Z0-9-]/g, "");
