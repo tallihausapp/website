@@ -15,10 +15,17 @@
 <meta property="og:description" content="Score every house you tour, see what you can comfortably afford, follow mortgage rates and get to closing day ready.">
 <meta property="og:image" content="https://tallihaus.com/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 
+<!-- Launch offer banner (code LAUNCH26, Monthly plan, first 3 months of Plus free). Remove when the code ends. -->
+<a class="promo-bar" href="https://apps.apple.com/redeem?ctx=offercodes&amp;id=6818800439&amp;code=LAUNCH26" target="_blank" rel="noopener">
+  <span><b>Launch offer:</b> your first 3 months of Tallihaus Plus free with code <b class="code">LAUNCH26</b>, through Dec 31</span>
+  <span class="promo-go">Redeem on iPhone &rarr;</span>
+</a>
+<script>/* The code ends Dec 31, 2026 (Eastern): hide the bar after that. */
+  if (Date.now() >= Date.parse('2027-01-01T00:00:00-05:00')) document.querySelector('.promo-bar')?.remove();</script>
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="/"><img src="img/icon-512.png?v=14" alt="">Tallihaus</a>

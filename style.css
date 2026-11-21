@@ -38,6 +38,14 @@ h1, h2, h3 { font-family: var(--rounded); letter-spacing: -0.02em; line-height: 
 }
 @media (max-width: 640px) { .nav .hide-sm { display: none; } }
 
+/* Launch offer bar above the header (index, homeowners, buyers) */
+.promo-bar { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 14px; padding: 9px 20px;
+  background: var(--leaf); color: var(--brand-deep); font-size: 15px; line-height: 1.4; text-align: center; }
+.promo-bar:hover { text-decoration: none; filter: brightness(1.04); }
+.promo-bar .code { letter-spacing: 0.06em; }
+.promo-bar .promo-go { font-weight: 650; white-space: nowrap; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 480px) { .promo-bar { font-size: 14px; padding: 8px 14px; } }
+
 /* Hero */
 .hero { background: var(--brand-deep); color: var(--cream); overflow: hidden; }
 .hero .wrap { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; padding-top: 72px; padding-bottom: 0; }
